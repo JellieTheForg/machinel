@@ -23,6 +23,6 @@ def process_images(input_folder, output_folder):
             new_img = make_square(input_path)
             new_img.save(output_path)
 
-input_folder = "abstract"
-output_folder = "abstract_square"
+input_folder = "images2"
+output_folder = "images_square"
 process_images(input_folder, output_folder)
