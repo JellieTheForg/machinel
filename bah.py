@@ -2,7 +2,7 @@ import os
 from collections import defaultdict
 import shutil
 
-# Directory containing the abstract art images
+
 directory = "/Users/Jellie/Desktop/machinel/abstract_art_512"
 
 # Dictionary to store image counts per artist
@@ -21,5 +21,4 @@ for filename in os.listdir(directory):
         if artist_counts[artist_name] > 3:
             os.remove(os.path.join(directory, filename))
 
-# Print confirmation message
-print("Done! Only three pieces of art per artist are kept.")
+
