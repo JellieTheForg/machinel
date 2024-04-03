@@ -52,7 +52,7 @@ encoder = Model(input_img, encoded)
 autoencoder.compile(optimizer='adam', loss='binary_crossentropy')
 
 # Train the autoencoder
-autoencoder.fit(X_train_scaled, X_train_scaled, epochs=48, batch_size=128, validation_data=(X_test_scaled, X_test_scaled)) # shuffle=True,
+autoencoder.fit(X_train_scaled, X_train_scaled, epochs=24, batch_size=96, validation_data=(X_test_scaled, X_test_scaled)) # shuffle=True,
 
 # Encode the input data
 X_train_encoded = encoder.predict(X_train_scaled)
@@ -67,7 +67,7 @@ classifier = Sequential([
 
 
 classifier.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-classifier.fit(X_train_encoded, y_train, epochs=12, batch_size=128, validation_split=0.1)
+classifier.fit(X_train_encoded, y_train, epochs=56, batch_size=64, validation_split=0.1)
 
 # Evaluate the classifier
 test_loss, test_acc = classifier.evaluate(X_test_encoded, y_test)
