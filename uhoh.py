@@ -43,6 +43,10 @@ print("Accuracy:", accuracy)
 # Generate confusion matrix
 conf_matrix = confusion_matrix(y_test, y_pred)
 
+np.save('y_test.npy', y_test)
+np.save('y_pred.npy', y_pred)
+
+
 # Plot confusion matrix
 plt.figure(figsize=(8, 6))
 sns.heatmap(conf_matrix, annot=True, fmt="d", cmap="Blues", cbar=False, square=True,
