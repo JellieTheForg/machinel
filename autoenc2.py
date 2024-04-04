@@ -8,14 +8,14 @@ from PIL import Image
 from sklearn.metrics import confusion_matrix
 
 # Load and preprocess images
-image_folder = "all_grey"
+image_folder = "art_144"
 images = []
 labels = []
 
 for file_name in os.listdir(image_folder):
-    if file_name.endswith(".jpg") or file_name.endswith(".png"):
+    if file_name.endswith(".jpg"):
         image_path = os.path.join(image_folder, file_name)
-        image = Image.open(image_path)
+        image = Image.open(image_path).convert("L")
         images.append(np.array(image))
         if "abstract" in file_name:
             labels.append(0)  # Label as abstract
@@ -31,17 +31,14 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 
 # Define the CNN model
 model = Sequential([
-    Conv2D(32, (3, 3), activation='relu', input_shape=(100, 100, 1)),
+    Conv2D(32, (3, 3), activation='relu', input_shape=(144, 144, 1)), #every convd2d thing applies this filter over the previous input
+    MaxPooling2D((2, 2)), #every maxpooling reduces the dimensions
+    Conv2D(64, (5, 5), activation='relu'),
     MaxPooling2D((2, 2)),
-    Conv2D(64, (3, 3), activation='relu'),
-    MaxPooling2D((2, 2)),
-    Conv2D(128, (3, 3), activation='relu'),
+    Conv2D(128, (7, 7), activation='relu'),
     MaxPooling2D((2,2)),
-    Conv2D(128, (3, 3), activation='relu'),
-    MaxPooling2D((2,2)),
-    Flatten(),
-    Dense(128, activation='relu'), 
-    Dense(64, activation='relu'), 
+    Flatten(), 
+    Dense(64, activation='relu'), #these just pass it down to lower and lower dimensions until you have only one(0 or 1) where you use sigmoid
     Dense(32, activation='relu'),  
     Dense(1, activation='sigmoid')
 ])
@@ -50,10 +47,10 @@ model = Sequential([
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
 # Train the model
-history = model.fit(X_train.reshape(-1, 100, 100, 1), y_train, epochs=6, batch_size=64, validation_split=0.2)
+history = model.fit(X_train, y_train, epochs=10, batch_size=64, validation_split=0.2)
 
 # Evaluate the model
-test_loss, test_acc = model.evaluate(X_test.reshape(-1, 100, 100, 1), y_test)
+test_loss, test_acc = model.evaluate(X_test, y_test)
 print(f"Test Accuracy: {test_acc}")
 
 model.save("CNN.keras")
@@ -65,7 +62,7 @@ plt.legend()
 plt.show()
 
 # Generate confusion matrix
-y_pred = model.predict(X_test.reshape(-1, 100, 100, 1))
+y_pred = model.predict(X_test)
 y_pred_binary = (y_pred > 0.5).astype(int)
 conf_matrix = confusion_matrix(y_test, y_pred_binary)
 plt.figure(figsize=(8, 6))

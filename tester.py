@@ -4,14 +4,14 @@ import numpy as np
 
 # Preprocess the input image
 def preprocess_image(image_path):
-    image = Image.open(image_path).convert("L")  # Convert to grayscale
-    image = image.resize((100, 100))  # Resize to 32x32 pixels
+    image = Image.open(image_path).convert("RGB")  # Convert to grayscale
+    image = image.resize((144, 144))  # Resize to 32x32 pixels
     image_array = np.array(image) / 255.0  # Normalize pixel values
-    return image_array.reshape(1, 100, 100, 1)  # Reshape for model input
+    return image_array.reshape(-1, 144, 144, 3)  # Reshape for model input
 
 
-model = load_model("CNN.keras")
-input_image_path = "mona.jpeg"
+model = load_model("CNN_RGB.keras")
+input_image_path = "sean.jpg"
 
 # Preprocess the input image
 input_image = preprocess_image(input_image_path)
@@ -22,7 +22,8 @@ prediction = model.predict(input_image)
 # Convert prediction to class label
 if prediction <= 0.5:
     class_label = "abstract"
-    pluh = prediction
+    print(prediction)
+    pluh = (1-(prediction*2))*100
 if prediction >= 0.5:
     class_label = "classical"
     pluh = int((prediction-0.5)*200)
