@@ -37,6 +37,8 @@ model = Sequential([
     MaxPooling2D((2, 2)),
     Conv2D(128, (7, 7), activation='relu'),
     MaxPooling2D((2,2)),
+    Conv2D(128, (9,9), activation='relu'),
+    MaxPooling2D((2,2)),
     Flatten(), 
     Dense(64, activation='relu'), #these just pass it down to lower and lower dimensions until you have only one(0 or 1) where you use sigmoid
     Dense(32, activation='relu'),  
@@ -47,7 +49,7 @@ model = Sequential([
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
 #here is where we can hyperadjust different params
-history = model.fit(X_train, y_train, epochs=12, batch_size=80, validation_split=0.2)
+history = model.fit(X_train, y_train, epochs=5, batch_size=80, validation_split=0.2)
 
 
 test_loss, test_acc = model.evaluate(X_test, y_test)
