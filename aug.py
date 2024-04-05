@@ -67,7 +67,7 @@ checkpoint_path = "best_model.keras"
 checkpoint = ModelCheckpoint(checkpoint_path, monitor='val_accuracy', verbose=1, save_best_only=True, mode='max')
 
 # Training the model with data augmentation
-history = model.fit(datagen.flow(X_train, y_train, batch_size=80), epochs=15, validation_data=(X_test, y_test), callbacks=[checkpoint])
+history = model.fit(datagen.flow(X_train, y_train, batch_size=64), epochs=300, validation_data=(X_test, y_test), callbacks=[checkpoint])
 
 # Evaluating the model
 test_loss, test_acc = model.evaluate(X_test, y_test)
