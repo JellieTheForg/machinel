@@ -1,0 +1,20 @@
+mkdir -p aug 
+python3 aug.py >& aug/aug_out
+
+mkdir -p aug_hrdsilu
+python3 aug_hrdsilu.py >& aug_hrdsilu/aug_hrdsilu_out
+
+mkdir -p aug_lin 
+python3 aug_lin.py >& aug_lin/aug_lin_out
+
+mkdir -p aug_relu6 
+python3 aug_relu6.py >& aug_relu6/aug_relu6_out
+
+mkdir -p aug_relu_silu
+python3 aug_relu_silu.py >& aug_relu_silu/aug_relu_silu_out
+
+mkdir -p aug_silu
+python3 aug_silu.py >& aug_silu/aug_silu_out
+
+mkdir -p aug_tanh 
+python3 aug_tanh.py >& aug_tanh/aug_tanh_out

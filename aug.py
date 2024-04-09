@@ -15,6 +15,8 @@ image_folder = "art_144"
 images = []
 labels = []
 
+fname = "aug"
+
 for file_name in os.listdir(image_folder):
     if file_name.endswith(".jpg"):
         image_path = os.path.join(image_folder, file_name)
@@ -67,7 +69,7 @@ checkpoint_path = "best_model.keras"
 checkpoint = ModelCheckpoint(checkpoint_path, monitor='val_accuracy', verbose=1, save_best_only=True, mode='max')
 
 # Training the model with data augmentation
-history = model.fit(datagen.flow(X_train, y_train, batch_size=64), epochs=300, validation_data=(X_test, y_test), callbacks=[checkpoint])
+history = model.fit(datagen.flow(X_train, y_train, batch_size=64), epochs=50, validation_data=(X_test, y_test), callbacks=[checkpoint])
 
 # Evaluating the model
 test_loss, test_acc = model.evaluate(X_test, y_test)
@@ -81,7 +83,15 @@ plt.plot(history.history['val_accuracy'], label='val_accuracy')
 plt.xlabel('Epoch')
 plt.ylabel('Accuracy')
 plt.legend()
-plt.show()
+plt.savefig(fname+"/acc_"+fname)
+plt.clf()
+
+# Plotting val_loss over epochs
+plt.plot(history.history['val_loss'], label='val_loss')
+plt.xlabel('Epoch')
+plt.ylabel('Loss')
+plt.legend()
+plt.savefig(fname+"/valloss_"+fname)
 
 # Confusion matrix
 y_pred = model.predict(X_test)
@@ -106,4 +116,4 @@ for i in range(conf_matrix.shape[0]):
 
 plt.xticks(np.arange(conf_matrix.shape[1]))
 plt.yticks(np.arange(conf_matrix.shape[0]))
-plt.show()
+plt.savefig(fname+"/confmatx_"+fname)
