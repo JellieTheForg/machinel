@@ -3,23 +3,22 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
-from tensorflow.keras.applications.vgg16 import preprocess_input, decode_predictions
+from PIL import Image
 
 # Load the pre-trained model
-model = load_model('best_model.keras')
+model = load_model('model885.keras')
+
+def preprocess_image(image_path):
+    image = Image.open(image_path).convert("RGB")  # Convert to RGB
+    image = image.resize((144, 144))  # Resize to 144x144 pixels
+    image_array = np.array(image) / 255.0  # Normalize pixel values
+    return image_array.reshape(-1, 144, 144, 3)  # Reshape for model input
 
 # Define the function to generate CAM
-def generate_cam(model, img_path, target_size=(144, 144)):
-    # Load and preprocess the input image
-    img = image.load_img(img_path, target_size=target_size)
-    x = image.img_to_array(img)
-    x = np.expand_dims(x, axis=0)  # Add batch dimension
-    x = preprocess_input(x)
-
-    # Get the prediction for the input image
-    preds = model.predict(x)
-    predicted_class_prob = preds[0][0]  # Probability of class 0 (abstract)
-    predicted_class = np.argmax(preds[0])
+def generate_cam(model, x):
+    x = preprocess_image(x)
+    predicted_class_prob = model.predict(x)[0][0]
+    predicted_class = 1 if predicted_class_prob > 0.5 else 0
 
     # Get the output of the last convolutional layer
     last_conv_layer = model.get_layer('conv2d_3')
@@ -35,37 +34,38 @@ def generate_cam(model, img_path, target_size=(144, 144)):
         cam += w * last_conv_layer_output[0, :, :, i]
 
     # Normalize the CAM
-    cam = np.maximum(cam, 0)
-    cam = cam / cam.max()
-
-    return cam, predicted_class_prob
-
+    cam = (cam - tf.reduce_min(cam)) / (tf.reduce_max(cam) - tf.reduce_min(cam))
+    print('Predicted class: ' + ('classical' if predicted_class >=0.5 else 'abstract'))
+    return cam, predicted_class
 
 # Define the function to plot CAM over the original image
 def plot_cam_over_image(img_path, cam):
     # Load the input image
-    img = image.load_img(img_path, target_size=(144, 144))
-    img = image.img_to_array(img)
+    img = Image.open(img_path).convert("RGB")
+    img = img.resize((144, 144))  # Resize to match CAM dimensions
 
     # Rescale the CAM to match the size of the original image
     cam = np.uint8(255 * cam)
     cam = np.expand_dims(cam, axis=-1)  # Add channel dimension
-    cam = tf.image.resize(cam, (144, 144))
+    cam = tf.image.resize(cam, (img.size[1], img.size[0]))  # Resize CAM to match image dimensions
 
-    plt.imshow(img.astype('uint8'))
-    plt.imshow(cam[:,:,0], cmap='jet', alpha=0.5)  # Ensure cam is 2D
+    # Convert PIL image to NumPy array
+    img_array = np.array(img)
+
+    # Apply CAM overlay
+    heatmap = plt.imshow(cam[:,:,0], cmap='jet', alpha=0.5)
+    plt.imshow(img_array, alpha=0.5)
     plt.axis('off')
+
+    # Print predicted clas
     plt.show()
 
+
 # Path to the new image
-new_img_path = 'test.jpg'
+new_img_path = 'image.png'
 
 # Generate CAM for the new image
 cam, predicted_class = generate_cam(model, new_img_path)
-
-# Print the predicted class
-print(predicted_class)
-print("Predicted class:", "abstract" if predicted_class <=0.5 else "classical")
 
 # Plot CAM overlaid on the original image
 plot_cam_over_image(new_img_path, cam)
