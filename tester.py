@@ -10,8 +10,8 @@ def preprocess_image(image_path):
     return image_array.reshape(-1, 144, 144, 3)  # Reshape for model input
 
 
-model = load_model("CNN_RGB_with_augmentation.keras")
-input_image_path = "julian.jpeg"
+model = load_model("best_model.keras")
+input_image_path = "test.jpg"
 
 # Preprocess the input image
 input_image = preprocess_image(input_image_path)

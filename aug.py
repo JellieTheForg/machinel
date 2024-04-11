@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.preprocessing.image import ImageDataGenerator # type: ignore
 import os
 from PIL import Image
 from sklearn.metrics import confusion_matrix
