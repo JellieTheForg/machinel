@@ -6,7 +6,7 @@ from tensorflow.keras.preprocessing import image
 from PIL import Image
 
 # Load the pre-trained model
-model = load_model('model885.keras')
+model = load_model('best_model.keras')
 
 def preprocess_image(image_path):
     image = Image.open(image_path).convert("RGB")  # Convert to RGB
@@ -18,6 +18,7 @@ def preprocess_image(image_path):
 def generate_cam(model, x):
     x = preprocess_image(x)
     predicted_class_prob = model.predict(x)[0][0]
+    print(predicted_class_prob)
     predicted_class = 1 if predicted_class_prob > 0.5 else 0
 
     # Get the output of the last convolutional layer
@@ -62,7 +63,7 @@ def plot_cam_over_image(img_path, cam):
 
 
 # Path to the new image
-new_img_path = 'image.png'
+new_img_path = 'image.jpeg'
 
 # Generate CAM for the new image
 cam, predicted_class = generate_cam(model, new_img_path)
