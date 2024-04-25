@@ -12,8 +12,8 @@ def reshapearray(a):
 	a = a[0]
 	for i,line in enumerate(a):
 		for j,pixel in enumerate(line):
-			for k,node in enumerate(pixel):
-				newarray[k][i][j] = node
+			for k,channel in enumerate(pixel):
+				newarray[k][i][j] = channel
 	return newarray
 				
 
@@ -69,7 +69,7 @@ for i,thing in enumerate(output2):
 		plt.title = "channel "+i
 		plt.show()
 
-# average all nodes together
+# average all channels together
 output = output[0]
 averaged = np.empty((output.shape[0],output.shape[1]))
 for i,line in enumerate(output):
@@ -92,13 +92,13 @@ for i,line in enumerate(output):
 		redtemp = []
 		greentemp = []
 		bluetemp = []
-		for k, node in enumerate(pixel):
+		for k, channel in enumerate(pixel):
 			if k%3 == 0:
-				redtemp.append(node*255)
+				redtemp.append(channel*255)
 			elif k%3 == 1:
-				greentemp.append(node*255)
+				greentemp.append(channel*255)
 			else:
-				bluetemp.append(node*255)
+				bluetemp.append(channel*255)
 		averaged_rgb[i][j][0] = int(mean(redtemp))
 		averaged_rgb[i][j][1] = int(mean(greentemp))
 		averaged_rgb[i][j][2] = int(mean(bluetemp))
