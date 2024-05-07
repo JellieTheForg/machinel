@@ -5,7 +5,7 @@ from PIL import Image
 
 model = load_model('best_model.keras')
 abstract_folder = 'abstract'
-classical_folder = 'classical'
+classical_folder = 'classic'
 total_images = 0
 correct_predictions = 0
 

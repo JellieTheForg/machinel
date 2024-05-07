@@ -9,10 +9,10 @@ from PIL import Image
 model = load_model('best_model.keras')
 
 def preprocess_image(image_path):
-    image = Image.open(image_path).convert("RGB")  # Convert to RGB
-    image = image.resize((144, 144))  # Resize to 144x144 pixels
-    image_array = np.array(image) / 255.0  # Normalize pixel values
-    return image_array.reshape(-1, 144, 144, 3)  # Reshape for model input
+    image = Image.open(image_path).convert("RGB")
+    image = image.resize((144, 144)) 
+    image_array = np.array(image) / 255.0  
+    return image_array.reshape(-1, 144, 144, 3) 
 
 # Define the function to generate CAM
 def generate_cam(model, x):
@@ -39,7 +39,13 @@ def generate_cam(model, x):
     print('Predicted class: ' + ('classical' if predicted_class >=0.5 else 'abstract'))
     return cam, predicted_class
 
-# Define the function to plot CAM over the original image
+# Define the function to plot only the CAM
+def plot_cam(cam):
+    plt.imshow(cam, cmap='jet')
+    plt.axis('off')
+    plt.show()
+
+# Define the function to plot CAM overlaid on the original image
 def plot_cam_over_image(img_path, cam):
     # Load the input image
     img = Image.open(img_path).convert("RGB")
@@ -53,20 +59,20 @@ def plot_cam_over_image(img_path, cam):
     # Convert PIL image to NumPy array
     img_array = np.array(img)
 
-    # Apply CAM overlay
-    heatmap = plt.imshow(cam[:,:,0], cmap='jet', alpha=0.5)
-    plt.imshow(img_array, alpha=0.5)
+    # Plot CAM overlaid on the original image
+    plt.imshow(img_array)
+    plt.imshow(cam[:, :, 0], cmap='jet', alpha=0.5)
     plt.axis('off')
-
-    # Print predicted clas
     plt.show()
 
-
 # Path to the new image
-new_img_path = 'image.jpeg'
+new_img_path = 'abstract_test.jpg'
 
 # Generate CAM for the new image
 cam, predicted_class = generate_cam(model, new_img_path)
+
+# Plot only the CAM
+plot_cam(cam)
 
 # Plot CAM overlaid on the original image
 plot_cam_over_image(new_img_path, cam)
