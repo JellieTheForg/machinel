@@ -6,7 +6,7 @@ from tensorflow.keras.preprocessing import image
 from PIL import Image
 
 # Load the pre-trained model
-model = load_model('best_model.keras')
+model = load_model('model885.keras')
 
 def preprocess_image(image_path):
     image = Image.open(image_path).convert("RGB")
@@ -66,7 +66,7 @@ def plot_cam_over_image(img_path, cam):
     plt.show()
 
 # Path to the new image
-new_img_path = 'abstract_test.jpg'
+new_img_path = 'photo.jpg'
 
 # Generate CAM for the new image
 cam, predicted_class = generate_cam(model, new_img_path)

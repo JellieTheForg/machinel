@@ -17,7 +17,7 @@ def reshapearray(a):
 				
 
 model = load_model("best_model.keras")
-image_path = "classical_test.jpg"
+image_path = "heart.jpeg"
 
 # preprocess
 image = Image.open(image_path).convert("RGB") # load in image

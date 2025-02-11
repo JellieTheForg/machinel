@@ -18,7 +18,7 @@ def reshapearray(a):
 				
 
 model = load_model("model885.keras")
-image_path = "sean.jpg"
+image_path = "tomp.jpg"
 
 # preprocess
 image = Image.open(image_path).convert("RGB") # load in image

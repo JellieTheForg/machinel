@@ -11,7 +11,7 @@ def preprocess_image(image_path):
 
 
 model = load_model("best_model.keras")
-input_image_path = "test.jpg"
+input_image_path = "classical_test.jpg"
 
 # Preprocess the input image
 input_image = preprocess_image(input_image_path)
